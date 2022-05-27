@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>类式组件state与生命周期</title>
+
+    <link rel="stylesheet" href="../css/lesson/lesson.css">
+
+    <script type="module" src='../js/modules/reactQuote.mjs'> </script>
+    <script type="module" src="../js/modules/lessQuote.mjs"> </script>
+    <script src="../js/library/babel.min.js"> </script>
+    
+    <script type="text/babel">
+        //类式组件，state案例
+        class Weather extends React.Component{
+            constructor(props){
+                super(props)
+                this.state = {isHot:true}
+                this.changeWt = this.changeWt.bind(this);
+            }
+            render(){
+                const {isHot} = this.state;
+                return <h2 onClick={this.changeWt}>今天天气很{isHot ? '热' : '冷'}</h2>
+            }
+            changeWt(){
+                //state不可直接更改，需要借助React.js内置API更改
+                const isHot = this.state.isHot;
+                this.setState({isHot:!isHot}); //不是替换，是更新状态
+            }
+        };
+        ReactDOM.render(<Weather/>,document.getElementById("test"));
+    </script>
+</head>
+<body>
+    <div id="test"></div>
+</body>
+</html>

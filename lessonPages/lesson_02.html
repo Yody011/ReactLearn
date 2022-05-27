@@ -1,0 +1,50 @@
+<!--
+ * @Author: your name
+ * @Date: 2022-05-22 17:01:58
+ * @LastEditTime: 2022-05-23 21:30:35
+ * @LastEditors: Yody
+ * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ * @FilePath: \ReactLear\lessonPages\lesson_02.html
+-->
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>第2课：jsx语法规则</title>
+		<script src="../js/library/react-17.0.2/react.production.min.js"></script><!-- 先加入基础react -->
+		<script src="../js/library/react-17.0.2/react-dom.production.min.js"></script><!-- 再加入可以操作DOM的react -->
+		<script src="../js/library/babel.min.js"> </script><!-- js编译器，可以将jsx语法转换为js语法 -->
+		<script type="text/babel">
+			const todos = ['定义虚拟DOM时，不要写引号','标签混入js表达式(不是语句)要用{}',
+				'样式类名指定不要用class，用className（防止与js语法clss关键字冲突）','内联样式要用style={{key:value}}的形式写',
+				'虚拟DOM只能有一个根标签','标签必须闭合','标签必须是HTML有对应的规范标签'];
+			const ComponentDes = ["React将小写开头视为原生DOM标签，大写视为一个组件"];
+			const myId = "aTgUigu";
+			const myData = 'Helo,rEaCt';
+			const VDom = (
+				<h2 className = "title" id={myId.toLowerCase()}>
+					<span style={{color:'gray',fontSize:'28px'}}>{myData.toLowerCase()}</span>
+				</h2>
+			);
+			const VDom2 = (
+				<ol>
+					{todos.map((value,index)=>{
+						return <li key={index}>{value}</li>
+					})}
+				</ol>
+			);
+			ReactDOM.render(VDom, document.getElementById("test"))
+			ReactDOM.render(VDom2, document.getElementById("JSXsyntaxRole"));
+		</script>
+	</head>
+	<body>
+		<div id = "test"></div>
+		<h2>jsx语法规则</h2>
+		<div id="JSXsyntaxRole">
+			
+		</div>
+		<h2>虚拟DOM</h2>
+		
+	</body>
+	
+</html>

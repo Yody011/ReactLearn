@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/carousel.css">
+    <style>
+        body{
+            display: flex;
+            height: 100vh;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .button{
+            width: 100%;
+            height: 100%;
+            position:absolute;
+            display: flex;
+            justify-content: space-between;
+            user-select: none;
+        }
+        .button-left,
+        .button-right{
+            font-size: 50px;
+            background-color: rgba(160,190,255,0.7);
+            padding: 0 20px;
+            line-height: 500px;
+            cursor: pointer;
+        }
+
+        .crsMini{
+            position: absolute;
+            display: flex;
+            z-index: 999;
+            border: 1px solid #00ff48;
+            background-color: #808080a6;
+            bottom: 5%;
+            height: 64px;
+            transform: translate(-50%,0);
+            left: 50%;
+            justify-content: space-between;
+        }
+        .crsMiniItem{
+            background-color: #00ff5e69;
+            margin: 0 10px;
+            font-size: 50px;
+            line-height: 64px;
+            cursor: pointer;
+        }
+        .crsMiniItem:hover{
+            color: red;
+        }
+        .crsMiniItem::before{
+            content: "·";
+        }
+    </style>
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+    
+</head>
+<body>
+    <div class="crsFrame">
+        <ul class="crsInner">
+            <li class="crsItem" key="01"><img src="https://sc02.alicdn.com/kf/Hba9f6c5ad8ee46a78c2eaeb6e9c2e706H.jpg" /></li>
+            <li class="crsItem" key="02"><img src="https://sc02.alicdn.com/kf/H79d9372119134bd5bd28ef7b42fc22e9o.jpg" /></li>
+            <li class="crsItem" key="03"><img src="https://sc02.alicdn.com/kf/Hcb02215bfb83413a8545ef2816c22ab6F.jpg" /></li>
+            <li class="crsItem" key="04"><img src="https://sc02.alicdn.com/kf/Hd390d82d835d471494b096c44b631ae6Q.jpg" /></li>
+            <li class="crsItem" key="05"><img src="https://sc02.alicdn.com/kf/Hd0d05105b79c43339567244d601694eec.jpg" /></li>
+            <li class="crsItem" key="06"><img src="https://sc02.alicdn.com/kf/H8dc45dc81c074c3dbfb2c99fe6e5b29dx.jpg" /></li>
+            <li class="crsItem" key="07"><img src="https://sc02.alicdn.com/kf/Hb209589bf177417db8bd9189fcaaaad7O.jpg" /></li>
+            <li class="crsItem" key="08"><img src="https://sc02.alicdn.com/kf/H7d529d8f79b647598697e10f8060cd01m.jpg" /></li>
+            <li class="crsItem" key="09"><img src="https://sc02.alicdn.com/kf/Ha2edef8c01424c76ad37d083a0d5fabbT.jpg" /></li>
+            <li class="crsItem" key="10"><img src="https://sc02.alicdn.com/kf/H79efcb1a34ec4361ae7585b41cb28a85R.jpg" /></li>
+            <li class="crsItem" key="11"><img src="https://sc02.alicdn.com/kf/H5bda0e9748dd4b839dc249b18da24df16.jpg" /></li>
+        </ul>
+        <ul class="crsMini">
+            <li class="crsMiniItem" key="01"></li>
+            <li class="crsMiniItem" key="02"></li>
+            <li class="crsMiniItem" key="03"></li>
+            <li class="crsMiniItem" key="04"></li>
+            <li class="crsMiniItem" key="05"></li>
+            <li class="crsMiniItem" key="06"></li>
+            <li class="crsMiniItem" key="07"></li>
+            <li class="crsMiniItem" key="08"></li>
+            <li class="crsMiniItem" key="09"></li>
+            <li class="crsMiniItem" key="10"></li>
+            <li class="crsMiniItem" key="11"></li>
+        </ul>
+        <div class="button">
+            <div class="button-left"><</div>
+            <div class="button-right">></div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+    
+    let time;
+
+    //nextOrPrev=0：下一页。=1：上一页
+    function srsAnimate(nextOrPrev = 0, speed = "normal", moveMode = 0){  
+        //选择器
+        var selectorStyle = (nextOrPrev == 0 ? ".crsItem:first" : ".crsItem:last");
+        var moveNode = $(selectorStyle);
+        //1.层叠动画,2.平移动画(快)
+        var moveAnStr = (moveMode == 0 ?
+                `0 -${moveNode.width()/2}px` :
+                `0 0 0 -${moveNode.width()}px`);
+        
+        if(nextOrPrev == 0){
+            return new Promise(resolve => {
+                moveNode.animate({margin:moveAnStr},speed,fn = function(){
+                    $(".crsInner").append(moveNode); // 将第一个轮播图追加到最后位置
+                    moveNode.css("margin",""); //动画完毕，清除动画属性
+                    resolve("finish");
+                });
+            });
+            
+        }
+        else{
+            return new Promise(resolve => {
+                moveNode.css("margin", moveAnStr);//初始化动画样式
+                $(".crsInner").prepend(moveNode);//将最后一个轮播图放到第一位
+                moveNode.animate({marginLeft: "0",marginRight: "30px"},speed,function(){
+                    moveNode.css("margin",""); //动画完毕，清除动画属性
+                    resolve("finish");
+                });
+            });
+            
+        }
+    }
+    //speed:动画速度；moveMode:动画模式(0,1)
+    function next(speed = "normal", moveMode = 0){
+        return srsAnimate(0, speed, moveMode);
+        // var moveNode = $(".crsItem:first"); //获取第一个轮播图
+        // var moveAnStr = (moveMode == 0 ? `0 -${moveNode.width()/2}px` : `0 0 0 -${moveNode.width()}px`);//1.层叠动画,2.平移动画(快)
+        // moveNode.animate({margin:moveAnStr},speed,fn = function(){
+        //     $(".crsInner").append(moveNode); // 将第一个轮播图追加到最后位置
+        //     moveNode.css("margin",""); //动画完毕，清除动画属性
+        // });
+    }
+    function prev(speed = "normal", moveMode = 0){
+        return srsAnimate(1, speed, moveMode);
+        // var moveNode = $(".crsItem:last");//获取最后一个轮播图
+        // var moveAnStr = (moveMode == 0 ? `0 -${moveNode.width()/2}px` : `0 0 0 -${moveNode.width()}px`);//1.层叠动画,2.平移动画(快)
+        // moveNode.css("margin", moveAnStr);//动画样式
+        // $(".crsInner").prepend(moveNode);//将最后一个轮播图放到第一位
+        // moveNode.animate({marginLeft: "0",marginRight: "30px"},speed,function(){
+        //     moveNode.css("margin",""); //动画完毕，清除动画属性
+        // });
+    }
+    function timer(){
+        time = setInterval(() => {
+            next('slow')
+        }, 3500);
+    }
+    async function srsSwitch(num){
+        var curNum = parseInt($(".crsItem:eq(1)").attr("key"));
+        var tarNum = parseInt(num);
+        var imgCount = $(".crsItem").length;
+        var leftGap,rightGap;
+
+        leftGap = curNum - tarNum;
+        leftGap = (leftGap < 0) ? (imgCount + leftGap) : leftGap;
+        rightGap = tarNum - curNum;
+        rightGap = (rightGap < 0) ? (imgCount + rightGap) : rightGap;
+
+        
+        clearInterval(time);
+        // console.log("左距离:"+leftGap+"-右距离:"+rightGap);
+        $(".crsItem").first().finish(); //清除动画
+        if(leftGap < rightGap){
+            while(curNum != tarNum){
+                await prev(30,1);
+                curNum = $(".crsItem:eq(1)").attr("key");
+                // console.log("L:c_" + curNum+"-t_"+tarNum);
+            }
+        }else{
+            while(curNum != tarNum){
+                console.log(await next(30,1));
+                curNum = $(".crsItem:eq(1)").attr("key");
+                // console.log("R:c_" + curNum+"-t_"+tarNum);
+            }
+        }
+        timer();
+    }
+    function digitalGap(val1,val2,count){
+        var dg = 0;
+        if(val1 > val2){
+            count + (val1 - val2)
+        }
+    }
+    $(".button-left").on('click', ()=>{
+        clearInterval(time);  //清除自动轮播
+        $(".crsItem").last().finish(); //清除正在执行的动画，使快速点击更加流畅
+        prev('fast'); //跳转到上一个轮播
+        timer(); //启动自动轮播
+    });
+    $(".button-right").on('click', ()=>{
+        clearInterval(time);
+        $(".crsItem").first().finish();
+        next('fast');//跳转到下一个轮播
+        timer();
+    });
+    $(".crsMiniItem").on('click', function(){
+        srsSwitch($(this).attr("key"));
+    });
+    timer();
+</script>
+</html>
